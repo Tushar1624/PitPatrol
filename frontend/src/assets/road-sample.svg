@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img" aria-label="Sample road surface photo">
+  <defs>
+    <linearGradient id="asphalt" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4b5563"/>
+      <stop offset="1" stop-color="#374151"/>
+    </linearGradient>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#93c5fd"/>
+      <stop offset="1" stop-color="#bfdbfe"/>
+    </linearGradient>
+  </defs>
+
+  <!-- sky + horizon -->
+  <rect width="800" height="150" fill="url(#sky)"/>
+  <rect y="140" width="800" height="360" fill="url(#asphalt)"/>
+
+  <!-- lane markings in perspective -->
+  <path d="M330 500 L385 140 L415 140 L470 500 Z" fill="#e5e7eb" opacity="0.9"/>
+  <g fill="#facc15" opacity="0.85">
+    <path d="M120 480 L150 430 L165 432 L138 482 Z"/>
+    <path d="M680 480 L650 430 L635 432 L662 482 Z"/>
+    <path d="M215 350 L232 320 L243 322 L228 352 Z"/>
+    <path d="M585 350 L568 320 L557 322 L572 352 Z"/>
+  </g>
+
+  <!-- curb lines -->
+  <path d="M40 500 L300 140" stroke="#9ca3af" stroke-width="8" fill="none" opacity="0.6"/>
+  <path d="M760 500 L500 140" stroke="#9ca3af" stroke-width="8" fill="none" opacity="0.6"/>
+
+  <!-- defect 1: pothole around (12%, 55%, w16%, h14%) => px 96..224, 275..345 -->
+  <ellipse cx="160" cy="310" rx="62" ry="34" fill="#1f2937"/>
+  <ellipse cx="160" cy="306" rx="52" ry="26" fill="#111827"/>
+  <path d="M110 300 q20 -18 50 -14 M210 322 q-18 16 -46 12" stroke="#4b5563" stroke-width="6" fill="none"/>
+
+  <!-- defect 2: crack around (45%, 30%, w18%, h10%) => px 360..504, 150..200 -->
+  <path d="M370 195 L395 172 L388 162 L415 155 L432 168 L460 152 L498 158"
+        stroke="#111827" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <path d="M400 178 L412 190 M445 156 L452 174" stroke="#111827" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+  <!-- defect 3: damaged surface around (58%, 60%, w20%, h16%) => px 464..624, 300..380 -->
+  <path d="M470 315 q40 -22 90 -6 q50 14 58 44 q6 28 -34 36 q-56 12 -96 -8 q-34 -18 -18 -66 Z"
+        fill="#2b3442"/>
+  <g stroke="#111827" stroke-width="4" opacity="0.8">
+    <path d="M492 322 l24 30 M540 312 l-10 44 M588 340 l-30 26" fill="none"/>
+  </g>
+
+  <!-- defect 4: road obstruction (cone + debris) around (76%, 38%, w14%, h18%) => px 608..720, 190..280 -->
+  <g>
+    <path d="M664 196 L694 264 L634 264 Z" fill="#f97316"/>
+    <rect x="628" y="264" width="72" height="12" rx="3" fill="#ea580c"/>
+    <rect x="642" y="222" width="44" height="12" fill="#f8fafc" opacity="0.95"/>
+    <circle cx="620" cy="270" r="9" fill="#57534e"/>
+    <circle cx="716" cy="252" r="7" fill="#6b7280"/>
+  </g>
+
+  <!-- subtle vignette for photo feel -->
+  <rect width="800" height="500" fill="black" opacity="0.05"/>
+</svg>
