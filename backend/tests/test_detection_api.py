@@ -147,3 +147,97 @@ def test_detect_rejects_invalid_image():
 
     finally:
         app.dependency_overrides.clear()
+
+def test_detect_rejects_invalid_token():
+    response = client.post(
+        "/api/detect",
+        headers={
+            "Authorization": "Bearer definitely-invalid-token",
+        },
+        files={
+            "image": (
+                "test.jpg",
+                create_test_image(),
+                "image/jpeg",
+            )
+        },
+    )
+
+    assert response.status_code == 401
+
+def test_detect_rejects_unsupported_file_type():
+    fake_user = SimpleNamespace(
+        id="test-user-id",
+    )
+
+    app.dependency_overrides[get_current_user] = (
+        lambda: fake_user
+    )
+
+    try:
+        response = client.post(
+            "/api/detect",
+            headers={
+                "Authorization": "Bearer test-access-token",
+            },
+            files={
+                "image": (
+                    "test.txt",
+                    b"not an image",
+                    "text/plain",
+                )
+            },
+        )
+
+        assert response.status_code == 400
+
+        body = response.json()
+        assert "Unsupported image type" in body["detail"]
+
+    finally:
+        app.dependency_overrides.clear()
+
+def test_detect_returns_500_when_gemini_fails():
+    fake_user = SimpleNamespace(
+        id="test-user-id",
+    )
+
+    failing_service = MagicMock()
+    failing_service.detect_and_save.side_effect = RuntimeError(
+        "Gemini API request failed"
+    )
+
+    app.dependency_overrides[get_current_user] = (
+        lambda: fake_user
+    )
+    app.dependency_overrides[get_detection_service] = (
+        lambda: failing_service
+    )
+
+    try:
+        response = client.post(
+            "/api/detect",
+            headers={
+                "Authorization": "Bearer test-access-token",
+            },
+            files={
+                "image": (
+                    "test.jpg",
+                    create_test_image(),
+                    "image/jpeg",
+                )
+            },
+        )
+
+        assert response.status_code == 500
+
+        body = response.json()
+        assert body["detail"] == (
+    "Detection failed. Please try again later."
+)
+        assert "Gemini API request failed" not in body["detail"]
+
+        failing_service.detect_and_save.assert_called_once()
+
+    finally:
+        app.dependency_overrides.clear()

@@ -56,10 +56,10 @@ async def detect_image(
             image_path=image.filename,
         )
 
-    except Exception as exc:
+    except Exception:
         raise HTTPException(
             status_code=500,
-            detail=f"Detection failed: {str(exc)}",
+            detail="Detection failed. Please try again later.",
         )
 
     return result

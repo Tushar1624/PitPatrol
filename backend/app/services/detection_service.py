@@ -28,15 +28,17 @@ class DetectionService:
     ) -> DetectionResponse:
         result = self.detector.detect(image)
 
-        if self.repository is None:
-            self.repository = DetectionRepository(access_token)
+        repository = self.repository
+
+        if repository is None:
+            repository = DetectionRepository(access_token)
 
         detections: list[dict[str, Any]] = [
             detection.model_dump()
             for detection in result.detections
         ]
 
-        self.repository.create_detection(
+        repository.create_detection(
             user_id=user_id,
             image_path=image_path,
             detection_count=result.detection_count,
